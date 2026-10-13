@@ -1,0 +1,87 @@
+
+double calculateFinalTotal(List<String> rawQuantities, List<String> rawPrices, bool isStudent) {
+  double totalBeforeDiscount = 0.0;
+
+  print('--- Processing Order Items ---');
+
+  // LOOP: Iterate through each pair of item inputs
+  for (int i = 0; i < rawQuantities.length; i++) {
+    // ERROR HANDLING
+    try {
+      int quantity = int.parse(rawQuantities[i]);
+      double itemPrice = double.parse(rawPrices[i]);
+
+      if (quantity <= 0 || itemPrice <= 0) {
+        throw FormatException('Quantity and price must be greater than zero.');
+      }
+
+      double itemTotal = quantity * itemPrice;
+      totalBeforeDiscount += itemTotal;
+      print('Item ${i + 1}: $quantity @ \$${itemPrice.toStringAsFixed(2)} = \$${itemTotal.toStringAsFixed(2)}');
+
+    } on FormatException catch (e) {
+      print('Item ${i + 1} ERROR HANDLED: ${e.message} (Skipped)');
+    } catch (e) {
+      print('Item ${i + 1} UNEXPECTED ERROR: $e (Skipped)');
+    }
+  }
+
+  // CONDITIONAL LOGIC: Determine discount rate based on student status & threshold
+  double discountRate = 0.0;
+
+  if (isStudent && totalBeforeDiscount >= 100.0) {
+    discountRate = 0.15; // 15% discount for high-value student purchase
+    print('\nApplied Discount: 15% (Student + Spend \$100+)');
+  } else if (isStudent) {
+    discountRate = 0.10; // 10% standard student discount (from Week 7)
+    print('\nApplied Discount: 10% (Standard Student Discount)');
+  } else if (totalBeforeDiscount >= 100.0) {
+    discountRate = 0.05; // 5% standard bulk discount
+    print('\nApplied Discount: 5% (Standard Bulk Discount)');
+  } else {
+    discountRate = 0.0;
+    print('\nNo discount applied.');
+  }
+
+  double discountAmount = totalBeforeDiscount * discountRate;
+  double finalTotal = totalBeforeDiscount - discountAmount;
+
+  print('Total Before Discount: \$${totalBeforeDiscount.toStringAsFixed(2)}');
+  print('Discount Amount:       -\$${discountAmount.toStringAsFixed(2)}');
+  print('Final Total:            \$${finalTotal.toStringAsFixed(2)}');
+
+  return finalTotal;
+}
+
+void main() {
+  // Week 7 Base Variables
+  String studentName = 'enchong';
+  bool isStudent = true;
+
+  print('Student Name: $studentName');
+  print('Is Student?   $isStudent\n');
+
+  print('==================================================');
+  print('TEST CASE 1: Valid Input (Week 7 Data: 3 x 45.50)');
+  print('==================================================');
+  // 3 * 45.50 = 136.50 (Eligible for 15% discount: total >= 100 and isStudent)
+  List<String> validQuantities = ['3'];
+  List<String> validPrices = ['45.50'];
+
+  // Passing parameters and receiving returned double
+  double result1 = calculateFinalTotal(validQuantities, validPrices, isStudent);
+
+  print('\n==================================================');
+  print('TEST CASE 2: Bad Input Test (Corrupted Data & Negatives)');
+  print('==================================================');
+  // ('abc', 'invalid') and invalid numbers ('-5')
+  List<String> badQuantities = ['3', 'abc', '-5', '2'];
+  List<String> badPrices = ['45.50', '20.00', '15.00', 'invalid_price'];
+
+  double result2 = calculateFinalTotal(badQuantities, badPrices, isStudent);
+
+  print('\nExecution Summary:');
+  print('Test 1 Final: \$${result1.toStringAsFixed(2)}');
+  print('Test 2 Final: \$${result2.toStringAsFixed(2)}');
+  print('Program completed with 0 crashes.');
+}
