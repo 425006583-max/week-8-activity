@@ -1,0 +1,32 @@
+Student Name: enchong
+Is Student?   true
+
+==================================================
+TEST CASE 1: Valid Input (Week 7 Data: 3 x 45.50)
+==================================================
+--- Processing Order Items ---
+Item 1: 3 @ $45.50 = $136.50
+
+Applied Discount: 15% (Student + Spend $100+)
+Total Before Discount: $136.50
+Discount Amount:       -$20.47
+Final Total:            $116.03
+
+==================================================
+TEST CASE 2: Bad Input Test (Corrupted Data & Negatives)
+==================================================
+--- Processing Order Items ---
+Item 1: 3 @ $45.50 = $136.50
+Item 2 ERROR HANDLED: abc (Skipped)
+Item 3 ERROR HANDLED: Quantity and price must be greater than zero. (Skipped)
+Item 4 ERROR HANDLED: Invalid double (Skipped)
+
+Applied Discount: 15% (Student + Spend $100+)
+Total Before Discount: $136.50
+Discount Amount:       -$20.47
+Final Total:            $116.03
+
+Execution Summary:
+Test 1 Final: $116.03
+Test 2 Final: $116.03
+Program completed with 0 crashes.
